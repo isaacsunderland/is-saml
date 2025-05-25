@@ -1,0 +1,69 @@
+# 
+# This dockerfile is used to build the devcontainer image for development of modules to extend the 
+# IQGeo Platform. It is based on the platform-devenv image and optionally
+# adds additional modules to the image. The modules are copied from the injector images
+#
+ARG PRODUCT_REGISTRY=harbor.delivery.iqgeo.cloud/releases_
+
+# START SECTION Aliases for Injector images - beware this section is updated by the IQGeo project configuration tool
+FROM ${PRODUCT_REGISTRY}comms/comms:3.3 AS comms
+# END SECTION
+
+
+FROM ${PRODUCT_REGISTRY}platform/platform-devenv-2:7.3
+
+USER root
+
+RUN mkdir -p ${MYWORLD_DATA_HOME}/tests
+
+# START SECTION optional dependencies (dev) - if you edit these lines manually note that your change will get lost if you run the IQGeo Project Update tool
+
+# END SECTION
+
+RUN pip install cryptojwt
+
+# START SECTION Copy the modules - beware this section is updated by the IQGeo project configuration tool
+COPY --from=comms / ${MODULES}/
+# END SECTION
+
+
+# START CUSTOM SECTION - root user
+# END CUSTOM SECTION
+
+# # fetch additional python dependencies
+RUN myw_product fetch pip_packages --include redis oidc
+# ensure pip dependencies are readable by Apache(www-data) and iqgeo
+RUN chown -R www-data:www-data ${MYWORLD_HOME}/Externals && \
+    chmod -R g+w ${MYWORLD_HOME}/Externals
+
+# Build additional node_modules
+RUN myw_product fetch node_modules
+RUN chown -R www-data:www-data ${MODULES}
+RUN chmod -R g+w ${MODULES}
+
+RUN myw_product build core_dev --debug
+RUN chown -R www-data:www-data ${WEBAPPS}/myworldapp/public
+RUN chmod -R g+w ${WEBAPPS}/myworldapp/public
+
+# Set up requirements for "Restart LRT task worker" vscode task
+RUN apt-get update && apt-get install -y inotify-tools
+RUN mkdir /run/myw_task
+RUN touch /run/myw_task/lrt_worker_refresh
+RUN chown -R iqgeo:iqgeo /run/myw_task
+
+# add additional entrypoint scripts 
+COPY --chown=www-data:www-data entrypoint.d/* /entrypoint.d/
+
+COPY --chown=www-data:www-data devserver_config/ /opt/iqgeo/config/
+
+# ensure entrypoint files are executable
+RUN chmod +x entrypoint.d/*
+
+# entrypoints should run as www-data and not iqgeo otherwise the UID on the files created in entrypoints won't match the UID mapping done in the dev container
+USER www-data 
+
+# configuration
+# paths for tools from modules
+# aditional environment variables
+# START CUSTOM SECTION - www-data user
+# END CUSTOM SECTION

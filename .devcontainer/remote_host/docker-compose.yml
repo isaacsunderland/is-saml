@@ -1,0 +1,26 @@
+services:
+    iqgeo:
+        extends:
+            file: ../docker-compose.yml
+            service: iqgeo-common
+        container_name: iqgeo_${PROJ_PREFIX:-myproj}
+        environment:
+            APACHE_ERROR_LOG: ""
+            KEYCLOAK_URL: ${KC_PROTOCOL:-http://}${KEYCLOAK_HOST:-keycloak.local}:${KEYCLOAK_PORT:-8081}
+
+        networks:
+            - iqgeo-network
+            # START CUSTOM SECTION
+            # END CUSTOM SECTION
+
+
+volumes:
+    js_bundles:
+        name: ${PROJ_PREFIX:-myproj}_js_bundles
+    # START CUSTOM SECTION
+    # END CUSTOM SECTION
+
+networks:
+    iqgeo-network:
+        name: ${NETWORK_NAME:-iqgeo-network}
+        external: true
