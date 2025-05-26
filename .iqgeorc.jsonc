@@ -1,5 +1,5 @@
 {
-    "name": "is-saml-72",
+    "name": "is-saml-71",
     // Dev Container display name
     "display_name": "Project for SAML test",
     // Prefix to use in container names and Docker compose
@@ -8,7 +8,7 @@
     "db_name": "myproj",
     "platform": {
         // The version of the IQGeo platform to use. Options are 7.0, and above
-        "version": "7.2",
+        "version": "7.1",
 
         // Dependency Options: ["memcached", "redis", "ldap", "saml", "oidc", "jwt"]
         // Please refer to the platform `Install & Configuration Guide` for more information regarding these dependencies.
