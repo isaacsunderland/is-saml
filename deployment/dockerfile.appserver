@@ -14,7 +14,7 @@ RUN rm -rf ${MODULES}/*/node_modules \
     && rm -rf ${MODULES}/*/native
 
 ############################################## project appserver image
-FROM ${PRODUCT_REGISTRY}platform/platform-appserver:7.3
+FROM ${PRODUCT_REGISTRY}platform/platform-appserver:7.2
 
 USER root
 
@@ -27,7 +27,6 @@ COPY --chown=www-data:www-data --from=iqgeo_builder /opt/iqgeo/platform/External
 
 # START SECTION Copy modules  - if you edit these lines manually note that your change will get lost if you run the IQGeo Project Update tool
 COPY --chown=www-data:www-data --from=iqgeo_builder ${MODULES}/custom/ ${MODULES}/custom/
-COPY --chown=www-data:www-data --from=iqgeo_builder ${MODULES}/comms/ ${MODULES}/comms/
 # END SECTION
 
 # START CUSTOM SECTION

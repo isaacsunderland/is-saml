@@ -34,11 +34,8 @@
         {
             // remove this entry if the repository does not contain a 'custom` module
             "name": "custom"
-        },
-        {
-            "name": "comms",
-            "version": "3.3"
         }
+ 
     ],
 
     // (relative) path of files to exclude from pulling and updating

@@ -1,5 +1,5 @@
 {
-    "name": "IQGeo Project Template",
+    "name": "Project for SAML test P72",
     "dockerComposeFile": "docker-compose.yml",
     "service": "iqgeo",
     "runServices": ["iqgeo"],

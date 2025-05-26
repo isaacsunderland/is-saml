@@ -1,5 +1,5 @@
 {
-    "name": "Project for customer MyProject (Remote)",
+    "name": "Project for SAML test (Remote)",
     "dockerComposeFile": "docker-compose.yml",
     "service": "iqgeo",
     "runServices": ["iqgeo"],
